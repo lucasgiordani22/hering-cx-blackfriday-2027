@@ -9,7 +9,7 @@ main{max-width:1000px;margin:26px auto;padding:0 16px 50px}.hero{height:clamp(34
 @media(max-width:600px){header{padding:14px}.hero{background-position:center}.hero-content{bottom:20px}.hero-content p{font-size:14px}}
 </style></head><body>
 <header><div class="brand">BLACKFRIDAY HERING 2027<small>GINCANA CX · EXPEDIÇÃO SUBMERSA</small></div><a class="link" href="#ranking" onclick="showRanking();return false">RANKING ↗</a></header>
-<main><section class="hero"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="go(0)">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
+<main><section class="hero"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="beginExpedition()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
 <div class="progress"><span></span><span></span><span></span><span></span><span></span></div>
 <div class="panel">
 <section class="stage active" id="s0"><div class="kicker">BRIEFING · 00</div><h2>Identifique sua equipe</h2><p>Uma rota foi fragmentada em etapas. Cada resposta correta libera o próximo trecho.</p><input id="team" placeholder="Nome da equipe" maxlength="50"><div class="feedback" id="f0"></div><button class="btn" onclick="start()">ENTRAR NA EXPEDIÇÃO →</button></section>
@@ -27,8 +27,15 @@ const SUPABASE_KEY='sb_publishable_E2FghpZ9EhU5FnuuR9df4A_xkvkZoGJ';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let team='',teamId=null,started=Date.now(),records=[];
 const phrase='impulsionando conexões e entregando experiências memoráveis';
-function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\\s+/g,' ')}
+function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\s+/g,' ')}
+function beginExpedition(){
+  go(0);
+  document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>document.getElementById('team').focus(),450);
+}
 function go(n){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.querySelectorAll('.progress span').forEach((x,i)=>x.classList.toggle('done',i<n));document.getElementById('count').textContent='ETAPA '+String(Math.min(n,4)).padStart(2,'0')+' / 04'}
+document.getElementById('team').addEventListener('keydown',e=>{if(e.key==='Enter')start()});
+document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();[()=>check(1,'1880'),()=>check(2,'cliente'),()=>check(3,'experiência'),finish][i]();}}));
 async function start(){team=document.getElementById('team').value.trim();if(!team){f0.className='feedback bad';f0.textContent='Informe o nome da equipe.';return}
 f0.className='feedback';f0.textContent='Conectando ao placar…';
 const {data,error}=await db.from('gincana_teams').insert({team_name:team,stage:0,points:0,elapsed_seconds:0}).select().single();
@@ -42,10 +49,10 @@ async function finish(){let f=document.getElementById('f4');if(norm(document.get
 let seconds=Math.floor((Date.now()-started)/1000);const {error}=await db.from('gincana_teams').update({stage:4,points:250,elapsed_seconds:seconds,completed_at:new Date().toISOString()}).eq('id',teamId);
 if(error){f.className='feedback bad';f.textContent='Erro ao registrar conclusão no ranking.';return}
 document.getElementById('doneTeam').textContent=team+' • '+seconds+' segundos';go(5)}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
-async function showRanking(){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('ranking').classList.add('active');ranklist.innerHTML='<p>Atualizando ranking…</p>';
+async function showRanking(){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('ranking').classList.add('active');document.getElementById('ranklist').innerHTML='<p>Atualizando ranking…</p>';
 const {data,error}=await db.from('gincana_teams').select('team_name,points,elapsed_seconds,stage,completed_at').order('points',{ascending:false}).order('elapsed_seconds',{ascending:true});
-if(error){ranklist.innerHTML='<p>Ranking indisponível. Verifique o SQL do Supabase.</p>';console.error(error);return}
-ranklist.innerHTML=data.length?'<ol>'+data.map(r=>'<li><b>'+safe(r.team_name)+'</b> — '+r.points+' pontos · etapa '+r.stage+'/4'+(r.completed_at?' · '+r.elapsed_seconds+'s':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe iniciou ainda.</p>'}
+if(error){document.getElementById('ranklist').innerHTML='<p>Ranking indisponível. Verifique o SQL do Supabase.</p>';console.error(error);return}
+document.getElementById('ranklist').innerHTML=data.length?'<ol>'+data.map(r=>'<li><b>'+safe(r.team_name)+'</b> — '+r.points+' pontos · etapa '+r.stage+'/4'+(r.completed_at?' · '+r.elapsed_seconds+'s':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe iniciou ainda.</p>'}
 function safe(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 db.channel('ranking-live').on('postgres_changes',{event:'*',schema:'public',table:'gincana_teams'},()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking()}).subscribe();
 </script></body></html>
