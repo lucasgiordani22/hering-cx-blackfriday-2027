@@ -1,81 +1,122 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BlackFriday Hering 2026 · Gincana CX</title>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06111d">
+<title>Black Friday Hering 2026 · Expedição Submersa</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#03070d;color:#eef8ff;font:16px/1.55 Arial,sans-serif;--cyan:#20c4ff;--blue:#087bd0}
-header{display:flex;justify-content:space-between;align-items:center;padding:17px 5vw;background:#050a11;border-bottom:1px solid #153650;position:sticky;top:0;z-index:3}.brand{font-weight:800;letter-spacing:.5px}.brand small{display:block;color:var(--cyan);font-size:11px;letter-spacing:2px}.link{color:#8edcff;text-decoration:none;font-size:13px}
-main{max-width:1000px;margin:26px auto;padding:0 16px 50px}.hero{height:clamp(340px,58vw,620px);background:#06182a url('hero-art.png') center/cover no-repeat;border:1px solid #13517b;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 20px 70px #0008}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#020711e8 0%,transparent 65%);pointer-events:none}
-.hero-content{position:absolute;z-index:1;bottom:clamp(25px,5vw,55px);left:clamp(20px,5vw,55px);right:20px;max-width:650px}.hero-content h1{font-size:clamp(28px,5vw,48px);line-height:1.05;margin:0 0 10px;text-shadow:0 2px 18px #000}.hero-content p{color:#c8eaff;margin:0 0 18px}.btn{display:inline-block;border:1px solid #36c9ff;background:linear-gradient(180deg,#087bd0,#034c91);color:white;padding:14px 24px;border-radius:50px;font-weight:800;letter-spacing:.4px;box-shadow:0 0 20px #00aaff55;cursor:pointer}.btn:hover{filter:brightness(1.15);transform:translateY(-1px)}.secondary{background:#071522;border:1px solid #1c577b;box-shadow:none;padding:10px 16px;font-size:13px}
-.progress{display:flex;gap:8px;margin:22px 0}.progress span{height:4px;flex:1;background:#16334b;border-radius:5px}.progress span.done{background:var(--cyan);box-shadow:0 0 10px #20c4ff66}
-.panel{border:1px solid #164361;background:linear-gradient(145deg,#0b1724,#060d15);border-radius:18px;padding:clamp(20px,4vw,38px);min-height:320px}.stage{display:none}.stage.active{display:block;animation:fade .25s}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.kicker{color:var(--cyan);font-size:11px;letter-spacing:2px;font-weight:800}.stage h2{font-size:clamp(25px,4vw,38px);line-height:1.15;margin:12px 0}.stage p{color:#b9cede}.quote{background:#061c2d;border-left:4px solid #14a9ef;padding:16px;border-radius:8px;margin:18px 0;color:#d9f2ff}input{display:block;width:100%;background:#030910;border:1px solid #28516d;color:white;border-radius:10px;padding:14px;font-size:16px;margin:10px 0}button{font-family:inherit}.feedback{min-height:25px;margin:9px 0;font-weight:bold}.ok{color:#5ff0b5}.bad{color:#ff9d91}.foot{color:#557b98;font-size:11px;display:flex;justify-content:space-between;margin:14px 4px}
-@media(max-width:600px){header{padding:14px}.hero{background-position:center}.hero-content{bottom:20px}.hero-content p{font-size:14px}}
-</style></head><body>
-<header><div class="brand">BLACKFRIDAY HERING 2026<small>GINCANA CX · EXPEDIÇÃO SUBMERSA</small></div><a class="link" href="#ranking" onclick="showRanking();return false">RANKING ↗</a></header>
-<main><section class="hero" id="homeScreen"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="beginExpedition()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
-<div class="progress" id="expProgress" style="display:none"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="panel" id="expPanel" style="display:none">
-<section class="stage active" id="s0"><div class="kicker">BRIEFING · 00</div><h2>Identifique sua equipe</h2><p>Uma rota foi fragmentada em etapas. Cada resposta correta libera o próximo trecho.</p><input id="team" placeholder="Nome da equipe" maxlength="50"><div class="feedback" id="f0"></div><button class="btn" onclick="start()">ENTRAR NA EXPEDIÇÃO →</button></section>
-<section class="stage" id="s1"><div class="kicker">ETAPA 1 · ORIGEM</div><h2>Todo percurso tem um ponto de partida.</h2><p>A história da Hering começa muito antes desta expedição. Encontre o ano que marca sua origem.</p><div class="quote">Em que ano a Hering nasceu?</div><input id="a1" placeholder="Digite o ano"><div class="feedback" id="f1"></div><button class="btn" onclick="check(1,'1880')">VALIDAR PISTA →</button></section>
-<section class="stage" id="s2"><div class="kicker">ETAPA 2 · O QUE CONECTA</div><h2>O tempo muda. O que conecta, permanece.</h2><div class="quote">“A marca atravessa gerações. A experiência acontece em cada contato.”</div><p>Qual é o foco que transforma um contato em uma experiência relevante?</p><input id="a2" placeholder="Digite sua resposta"><div class="feedback" id="f2"></div><button class="btn" onclick="check(2,'cliente')">VALIDAR PISTA →</button></section>
-<section class="stage" id="s3"><div class="kicker">ETAPA 3 · A CORRENTE</div><h2>Conexões não acontecem por acaso.</h2><div class="quote">“Ouvir é o começo. Compreender é o caminho. ______ é o que transforma a jornada.”</div><p>Complete com uma palavra que representa o que CX entrega em cada interação.</p><input id="a3" placeholder="Digite sua resposta"><div class="feedback" id="f3"></div><button class="btn" onclick="check(3,'experiência')">VALIDAR PISTA →</button></section>
-<section class="stage" id="s4"><div class="kicker">ETAPA 4 · CÂMARA DO TESOURO</div><h2>A última porta. A frase completa.</h2><p>Escrevam a frase que traduz a missão do CX.</p><div class="quote">Uma frase foi revelada ao longo da expedição. Digite-a exatamente como descobriram.</div><input id="final" placeholder="Escreva a frase completa"><div class="feedback" id="f4"></div><button class="btn" onclick="finish()">ABRIR CÂMARA →</button></section>
-<section class="stage" id="s5"><div class="kicker">MISSÃO CONCLUÍDA</div><h2 style="color:#20c4ff">Expedição concluída! 🏆</h2><p id="doneTeam"></p><div class="quote"><h2 id="finalPlace">Sua classificação está sendo calculada…</h2><p id="finalPoints"></p></div><h3>CLASSIFICAÇÃO FINAL</h3><div id="finalranklist"></div><button class="btn" onclick="showRanking()">VER RANKING GERAL →</button> <button class="btn secondary" onclick="home()" aria-label="Voltar ao início" title="Voltar ao início">⌂ VOLTAR AO INÍCIO</button></section>
-<section class="stage" id="ranking"><div class="kicker">PLACAR DA EXPEDIÇÃO</div><h2>Ranking de equipes</h2><p id="ranknote">Ranking compartilhado (Supabase).</p><div id="ranklist"></div><button class="btn secondary" onclick="go(5)">VOLTAR</button></section>
-</div><div class="foot"><span>HERING CX • 2026</span><span id="count">ETAPA 00 / 04</span></div></main>
+:root{--bg:#06101b;--surface:#0b1b2b;--surface2:#10263a;--line:#24465f;--text:#eff8ff;--muted:#a9c3d8;--cyan:#58d5ff;--blue:#147bd1;--green:#61e6b1;--red:#ff9b9b;--gold:#ffd778;--radius:22px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#123c5d 0,transparent 48%),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px clamp(16px,5vw,64px);background:#06101beF;border-bottom:1px solid #17364d;backdrop-filter:blur(16px)}
+.brand{font-weight:850;letter-spacing:.04em;font-size:14px}.brand small{display:block;color:var(--cyan);font-size:10px;letter-spacing:.19em;margin-top:2px}
+.header-actions{display:flex;gap:8px;align-items:center}.textbtn{background:transparent;border:1px solid var(--line);border-radius:99px;color:#bdeaff;padding:9px 13px;font-size:12px;font-weight:700}
+main{max-width:1050px;margin:auto;padding:24px 16px 60px}
+.hero{min-height:clamp(440px,66vw,650px);position:relative;overflow:hidden;border:1px solid #27618a;border-radius:26px;background:linear-gradient(120deg,#06182799,#04101b66),url('hero-art.png') center/cover no-repeat;box-shadow:0 24px 90px #0006}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#020912f5 0%,#02091225 75%);pointer-events:none}
+.hero-content{position:absolute;z-index:1;left:clamp(22px,5vw,64px);right:24px;bottom:clamp(28px,6vw,68px);max-width:680px}
+.eyebrow{font-size:11px;letter-spacing:.2em;color:var(--cyan);font-weight:850}.hero h1{font-size:clamp(36px,7vw,70px);line-height:.98;letter-spacing:-.04em;margin:14px 0}.hero p{color:#d0e7f7;max-width:520px;font-size:clamp(15px,2vw,19px)}
+.btn{border:1px solid #69dcff;background:linear-gradient(180deg,#168bdc,#07549c);color:white;border-radius:99px;padding:14px 22px;font-weight:850;box-shadow:0 8px 26px #008dff33;transition:transform .15s,filter .15s}.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.btn.secondary{background:#0b1b2b;border-color:#355a74;box-shadow:none}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.shell{display:none;margin-top:20px}.shell.visible{display:block}.panel{background:linear-gradient(145deg,#0d2031,#081521);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(20px,4vw,42px);box-shadow:0 20px 60px #0002}
+.stage{display:none}.stage.active{display:block;animation:enter .25s ease}@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.progress-wrap{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin:0 0 12px}.progress{display:flex;gap:7px;margin-bottom:25px}.progress i{height:5px;flex:1;background:#1b354b;border-radius:8px}.progress i.done{background:var(--cyan);box-shadow:0 0 14px #58d5ff55}
+h2{font-size:clamp(26px,4.5vw,42px);line-height:1.12;letter-spacing:-.025em;margin:10px 0 14px}p{color:var(--muted)}.quote{padding:16px 18px;border-left:3px solid var(--cyan);background:#071d2d;border-radius:0 12px 12px 0;margin:20px 0;color:#d8f2ff}
+.field{margin:16px 0}.field label{display:block;font-size:13px;color:#c7dceb;font-weight:700;margin-bottom:7px}.field input{width:100%;border:1px solid #34546c;background:#030b13;color:white;padding:14px 15px;border-radius:12px}.field input::placeholder{color:#718ca2}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.status{min-height:26px;margin:12px 0;font-size:14px;font-weight:700}.status.ok{color:var(--green)}.status.error{color:var(--red)}.status.info{color:var(--gold)}
+.reward{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:20px 0}.reward-card{border:1px solid #24465f;background:#071725;border-radius:14px;padding:14px}.reward-card b{display:block;color:var(--cyan);font-size:23px}.reward-card small{color:var(--muted)}
+.list{padding-left:22px}.list li{padding:7px 0;color:#d7e7f4}.rank{padding-left:25px}.rank li{padding:12px 10px;border-bottom:1px solid #1e3a50}.rank li:first-child{color:var(--gold)}.rank small{color:var(--muted)}
+footer{display:flex;justify-content:space-between;gap:12px;color:#64839c;font-size:11px;margin:18px 5px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:20;width:min(92vw,560px);padding:14px 17px;background:#122a3d;border:1px solid #47718e;border-radius:14px;box-shadow:0 12px 40px #0008;display:none}.toast.show{display:block}
+@media(max-width:600px){header{padding:12px 14px}.brand{font-size:12px}.textbtn{padding:8px 10px}.hero{min-height:510px;background-position:58% center}.hero-content{left:20px;right:18px;bottom:25px}.panel{padding:20px}.actions .btn{width:100%}footer{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="brand">BLACK FRIDAY HERING 2026<small>GINCANA CX · EXPEDIÇÃO SUBMERSA</small></div><div class="header-actions"><button class="textbtn" onclick="openRanking()">🏆 Ranking</button></div></header>
+<main>
+<section class="hero" id="home"><div class="hero-content"><div class="eyebrow">UMA MISSÃO · QUATRO ETAPAS</div><h1>O tesouro<br>não está à vista.</h1><p>Siga as pistas, supere os desafios e descubra o que conecta cada experiência.</p><button class="btn" onclick="begin()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
+<div class="shell" id="shell"><div class="panel">
+<div class="progress-wrap"><span id="stepLabel">BRIEFING · 00</span><span id="stepCount">0 de 4 etapas</span></div><div class="progress" id="progress"><i></i><i></i><i></i><i></i></div>
+<section class="stage active" id="s0"><div class="eyebrow">BRIEFING</div><h2>Identifique sua equipe</h2><p>Use o nome oficial da equipe e seu nome de participante. O cadastro é único: se você já começou, poderá continuar de onde parou.</p>
+<div class="field"><label for="team">Nome da equipe</label><input id="team" maxlength="50" autocomplete="organization" placeholder="Ex.: Equipe Oceano"></div>
+<div class="field"><label for="player">Seu nome</label><input id="player" maxlength="70" autocomplete="name" placeholder="Nome e sobrenome"></div>
+<div class="status" id="f0" role="status" aria-live="polite"></div><div class="actions"><button class="btn" id="startBtn" onclick="startOrResume()">CONTINUAR →</button><button class="btn secondary" onclick="home()">Voltar ao início</button></div></section>
+<section class="stage" id="s1"><div class="eyebrow">ETAPA 1 · ORIGEM</div><h2>Todo percurso tem um ponto de partida.</h2><p>A história da Hering começa muito antes desta expedição. Encontre o ano que marca sua origem.</p><div class="quote">Em que ano a Hering nasceu?</div><div class="field"><label for="a1">Sua resposta</label><input id="a1" inputmode="numeric" placeholder="Digite o ano"></div><div class="status" id="f1" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(1)">VALIDAR PISTA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
+<section class="stage" id="s2"><div class="eyebrow">ETAPA 2 · O QUE CONECTA</div><h2>O tempo muda. O que conecta, permanece.</h2><div class="quote">“A marca atravessa gerações. A experiência acontece em cada contato.”</div><p>Qual é o foco que transforma um contato em uma experiência relevante?</p><div class="field"><label for="a2">Sua resposta</label><input id="a2" placeholder="Digite sua resposta"></div><div class="status" id="f2" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(2)">VALIDAR PISTA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
+<section class="stage" id="s3"><div class="eyebrow">ETAPA 3 · A CORRENTE</div><h2>Conexões não acontecem por acaso.</h2><div class="quote">“Ouvir é o começo. Compreender é o caminho. ______ é o que transforma a jornada.”</div><p>Complete com uma palavra que representa o que CX entrega em cada interação.</p><div class="field"><label for="a3">Sua resposta</label><input id="a3" placeholder="Digite sua resposta"></div><div class="status" id="f3" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(3)">VALIDAR PISTA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
+<section class="stage" id="s4"><div class="eyebrow">ETAPA 4 · CÂMARA DO TESOURO</div><h2>A última porta. A frase completa.</h2><p>Reúnam as pistas e escrevam a frase que traduz a missão do CX.</p><div class="quote">Uma frase foi revelada ao longo da expedição. Digite-a para abrir a câmara.</div><div class="field"><label for="final">Frase final</label><input id="final" placeholder="Escreva a frase completa"></div><div class="status" id="f4" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(4)">ABRIR CÂMARA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
+<section class="stage" id="s5"><div class="eyebrow">MISSÃO CONCLUÍDA</div><h2 style="color:var(--cyan)">Expedição concluída! 🏆</h2><p id="doneTeam"></p><div class="reward"><div class="reward-card"><small>Classificação</small><b id="finalPlace">—</b></div><div class="reward-card"><small>Pontuação</small><b id="finalPoints">—</b></div><div class="reward-card"><small>Tempo</small><b id="finalTime">—</b></div></div><h3>O que sua equipe conquistou</h3><ol class="list" id="achievements"></ol><div class="actions"><button class="btn" onclick="openRanking()">VER RANKING →</button><button class="btn secondary" onclick="home()">Voltar ao início</button></div></section>
+<section class="stage" id="ranking"><div class="eyebrow">PLACAR DA EXPEDIÇÃO</div><h2>Ranking de equipes</h2><p>Classificação oficial calculada no servidor. Equipes em andamento aparecem separadas.</p><h3>Concluídas</h3><ol class="rank" id="ranklist"></ol><h3>Em andamento</h3><ol class="rank" id="pendinglist"></ol><div class="status" id="rankStatus" role="status" aria-live="polite"></div><div class="actions"><button class="btn secondary" onclick="home()">VOLTAR AO INÍCIO</button></div></section>
+</div></div><footer><span>HERING CX · 2026</span><span>Expedição Submersa</span></footer></main><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL='https://cozjgknlmefjgxayvflt.supabase.co';
 const SUPABASE_KEY='sb_publishable_E2FghpZ9EhU5FnuuR9df4A_xkvkZoGJ';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let team='',teamId=null,started=Date.now(),records=[];
-const phrase='impulsionando conexões e entregando experiências memoráveis';
-function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\s+/g,' ')}
-function beginExpedition(){
-  document.getElementById('homeScreen').style.display='none';
-  document.getElementById('expProgress').style.display='flex';
-  document.getElementById('expPanel').style.display='block';
-  go(0);
-  document.getElementById('expPanel').scrollIntoView({behavior:'smooth',block:'center'});
-  setTimeout(()=>document.getElementById('team').focus(),450);
+let current=null,teamName='',playerName='',busy=false;
+const answers={1:'1880',2:'cliente',3:'experiência',4:'impulsionando conexões e entregando experiências memoráveis'};
+const labels=['','Origem','O que conecta','A corrente','Câmara do tesouro'];
+function norm(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\\s+/g,' ')}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),5000)}
+function status(id,msg,type='info'){const el=document.getElementById(id);el.textContent=msg;el.className='status '+type}
+function busyBtn(id,on,text){const b=document.getElementById(id);if(!b)return;b.disabled=on;if(text)b.textContent=text;else b.textContent='CONTINUAR →'}
+function begin(){document.getElementById('home').style.display='none';document.getElementById('shell').classList.add('visible');show(0);document.getElementById('team').focus()}
+function home(){document.getElementById('home').style.display='block';document.getElementById('shell').classList.remove('visible');show(0);window.scrollTo({top:0,behavior:'smooth'})}
+function show(n){document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.getElementById('stepLabel').textContent=n===0?'BRIEFING · 00':n===5?'MISSÃO CONCLUÍDA':'ETAPA '+n+' · '+labels[n].toUpperCase();document.getElementById('stepCount').textContent=Math.min(n,4)+' de 4 etapas';document.querySelectorAll('#progress i').forEach((e,i)=>e.classList.toggle('done',i< (current?.stage||0)));document.getElementById('shell').scrollIntoView({behavior:'smooth',block:'start'})}
+async function startOrResume(){
+ if(busy)return;teamName=document.getElementById('team').value.trim();playerName=document.getElementById('player').value.trim();
+ if(!teamName||!playerName){status('f0','Informe o nome da equipe e seu nome para continuar.','error');return}
+ busy=true;busyBtn('startBtn',true,'CONSULTANDO…');status('f0','Verificando se já existe uma expedição para você…');
+ try{
+  const {data,error}=await db.rpc('gincana_start_or_resume',{p_team_name:teamName,p_player_name:playerName});
+  if(error)throw error;
+  current=Array.isArray(data)?data[0]:data;
+  if(!current?.team_id)throw new Error('Resposta inesperada do servidor.');
+  teamName=current.team_name;playerName=current.player_name;
+  if(current.stage>=4){await completedView();return}
+  status('f0',current.resumed?'Expedição encontrada! Vamos continuar de onde você parou.':'Equipe registrada! Boa expedição.','ok');
+  setTimeout(()=>show(current.stage+1),350);
+ }catch(e){status('f0',friendly(e),'error')}
+ finally{busy=false;busyBtn('startBtn',false)}
 }
-function home(){
-  document.getElementById('homeScreen').style.display='block';
-  document.getElementById('expProgress').style.display='none';
-  document.getElementById('expPanel').style.display='none';
-  document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));
-  document.getElementById('s0').classList.add('active');
-  document.getElementById('count').textContent='ETAPA 00 / 04';
-  document.querySelectorAll('.progress span').forEach(x=>x.classList.remove('done'));
-  window.scrollTo({top:0,behavior:'smooth'});
+function resumeView(){home();toast('Seu progresso fica salvo. Use o mesmo nome de equipe e participante para retomar.')}
+async function answer(n){
+ if(busy||!current)return;const input=document.getElementById(n===4?'final':'a'+n);const value=input.value.trim();
+ if(!value){status('f'+n,'Digite uma resposta antes de validar.','error');input.focus();return}
+ busy=true;status('f'+n,'Validando resposta com segurança…','info');
+ try{
+  const {data,error}=await db.rpc('gincana_answer',{p_team_id:current.team_id,p_stage:n,p_answer:value});
+  if(error)throw error;
+  const result=Array.isArray(data)?data[0]:data;
+  if(!result?.correct){status('f'+n,'Ainda não é essa. Revise a pista e tente novamente.','error');return}
+  current.stage=result.stage;current.points=result.points;
+  status('f'+n,'✓ Pista confirmada! '+result.points+' pontos acumulados.','ok');
+  if(n<4){toast('Etapa '+n+' concluída · +50 pontos');setTimeout(()=>show(n+1),650)}
+  else{await completedView()}
+ }catch(e){status('f'+n,friendly(e),'error')}
+ finally{busy=false}
 }
-function go(n){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.querySelectorAll('.progress span').forEach((x,i)=>x.classList.toggle('done',i<n));document.getElementById('count').textContent='ETAPA '+String(Math.min(n,4)).padStart(2,'0')+' / 04'}
-document.getElementById('team').addEventListener('keydown',e=>{if(e.key==='Enter')start()});
-document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();[()=>check(1,'1880'),()=>check(2,'cliente'),()=>check(3,'experiência'),finish][i]();}}));
-async function start(){team=document.getElementById('team').value.trim();if(!team){f0.className='feedback bad';f0.textContent='Informe o nome da equipe.';return}
-f0.className='feedback';f0.textContent='Conectando ao placar…';
-const {data,error}=await db.from('gincana_teams').insert({team_name:team,stage:0,points:0,elapsed_seconds:0}).select().single();
-if(error){f0.className='feedback bad';f0.textContent='Não foi possível registrar equipe. Confira a configuração do Supabase.';console.error(error);return}
-teamId=data.id;started=Date.now();go(1)}
-async function check(n,a){let f=document.getElementById('f'+n);if(norm(document.getElementById('a'+n).value)===norm(a)){
-f.className='feedback ok';f.textContent='✓ Pista confirmada. Próxima etapa liberada.';
-await db.from('gincana_teams').update({stage:n,points:n*50}).eq('id',teamId);
-setTimeout(()=>go(n+1),600)}else{f.className='feedback bad';f.textContent='Não é aqui… revise a pista e tente novamente.'}}
-async function finish(){let f=document.getElementById('f4');if(norm(document.getElementById('final').value)===norm(phrase)){
-let seconds=Math.floor((Date.now()-started)/1000);const {error}=await db.from('gincana_teams').update({stage:4,points:0,elapsed_seconds:seconds,completed_at:new Date().toISOString()}).eq('id',teamId);
-if(error){f.className='feedback bad';f.textContent='Erro ao registrar conclusão no ranking.';console.error(error);return}
-document.getElementById('doneTeam').textContent=team+' • '+seconds+' segundos';go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
-const finishScores=[300,200,100,50];
-async function renderFinalRanking(){
- const el=document.getElementById('finalranklist');el.innerHTML='<p>Calculando classificação…</p>';
- const {data,error}=await db.from('gincana_teams').select('id,team_name,points,elapsed_seconds,stage,completed_at').eq('stage',4).not('completed_at','is',null).order('completed_at',{ascending:true}).order('elapsed_seconds',{ascending:true});
- if(error){el.innerHTML='<p>Não foi possível carregar a classificação.</p>';console.error(error);return}
- const ranked=data||[];
- for(let i=0;i<ranked.length;i++){const score=finishScores[i]||0;if(ranked[i].points!==score){await db.from('gincana_teams').update({points:score}).eq('id',ranked[i].id);ranked[i].points=score}}
- const pos=ranked.findIndex(r=>r.id===teamId)+1;document.getElementById('finalPlace').textContent=pos?('Você ficou em '+pos+'º lugar!'):'Equipe concluída!';document.getElementById('finalPoints').textContent=pos?(finishScores[pos-1]||0)+' pontos conquistados':'Pontuação registrada';
- el.innerHTML=ranked.length?'<ol>'+ranked.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(finishScores[i]||0)+' pontos'+(i===0?' 🥇':i===1?' 🥈':i===2?' 🥉':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe concluiu ainda.</p>';
+async function completedView(){
+ show(5);document.getElementById('doneTeam').textContent=teamName+' · '+playerName;
+ document.getElementById('finalPlace').textContent='…';document.getElementById('finalPoints').textContent='…';document.getElementById('finalTime').textContent='…';
+ try{const {data,error}=await db.rpc('gincana_get_result',{p_team_id:current.team_id});if(error)throw error;const r=Array.isArray(data)?data[0]:data;
+ document.getElementById('finalPlace').textContent=r.position+'º';document.getElementById('finalPoints').textContent=r.points+' pts';document.getElementById('finalTime').textContent=formatTime(r.elapsed_seconds);
+ document.getElementById('achievements').innerHTML='<li>Briefing e identificação concluídos</li><li>Etapa 1 · Origem (+50 pts)</li><li>Etapa 2 · O que conecta (+50 pts)</li><li>Etapa 3 · A corrente (+50 pts)</li><li>Etapa 4 · Câmara do tesouro (+50 pts)</li><li>Missão finalizada · '+r.points+' pontos totais</li>';
+ }catch(e){toast(friendly(e))}
 }
-async function showRanking(){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('ranking').classList.add('active');document.getElementById('ranklist').innerHTML='<p>Atualizando ranking…</p>';
-const {data,error}=await db.from('gincana_teams').select('team_name,points,elapsed_seconds,stage,completed_at').order('points',{ascending:false}).order('elapsed_seconds',{ascending:true});
-if(error){document.getElementById('ranklist').innerHTML='<p>Ranking indisponível. Verifique o SQL do Supabase.</p>';console.error(error);return}
-document.getElementById('ranklist').innerHTML=data.length?'<ol>'+data.map(r=>'<li><b>'+safe(r.team_name)+'</b> — '+r.points+' pontos · etapa '+r.stage+'/4'+(r.completed_at?' · '+r.elapsed_seconds+'s':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe iniciou ainda.</p>'}
-function safe(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-db.channel('ranking-live').on('postgres_changes',{event:'*',schema:'public',table:'gincana_teams'},()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking()}).subscribe();
-</script></body></html>
+function formatTime(s){s=Number(s||0);return Math.floor(s/60)+'m '+(s%60)+'s'}
+async function openRanking(){
+ document.getElementById('home').style.display='none';document.getElementById('shell').classList.add('visible');show('ranking');
+ const done=document.getElementById('ranklist'),pending=document.getElementById('pendinglist');done.innerHTML='<li>Carregando…</li>';pending.innerHTML='<li>Carregando…</li>';status('rankStatus','');
+ try{const {data,error}=await db.rpc('gincana_ranking');if(error)throw error;
+ const rows=data||[],finished=rows.filter(x=>x.completed),ongoing=rows.filter(x=>!x.completed);
+ done.innerHTML=finished.length?finished.map((r,i)=>'<li><b>'+escapeHtml(r.team_name)+'</b> — '+r.points+' pts <small>· '+formatTime(r.elapsed_seconds)+'</small>'+(i===0?' 🥇':i===1?' 🥈':i===2?' 🥉':'')+'</li>').join(''):'<li>Nenhuma equipe concluiu ainda.</li>';
+ pending.innerHTML=ongoing.length?ongoing.map(r=>'<li><b>'+escapeHtml(r.team_name)+'</b> <small>· etapa '+r.stage+'/4</small></li>').join(''):'<li>Nenhuma expedição em andamento.</li>';
+ }catch(e){done.innerHTML='<li>Ranking indisponível.</li>';pending.innerHTML='';status('rankStatus',friendly(e),'error')}
+}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function friendly(e){const m=String(e?.message||e||'');if(/Failed to fetch|NetworkError|fetch/i.test(m))return 'Sem conexão com o servidor. Confira sua internet e tente novamente.';if(/already|duplicate|unique/i.test(m))return 'Essa equipe ou participante já está cadastrado. Use os dados existentes para retomar.';if(/not found|expired/i.test(m))return 'Não encontramos sua expedição. Confira o nome da equipe e do participante.';return 'Não foi possível concluir agora. Tente novamente em instantes. Se persistir, avise a organização.'}
+document.querySelectorAll('#team,#player').forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')startOrResume()}));
+document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();answer(i+1)}}));
+</script>
+</body></html>
