@@ -9,15 +9,15 @@ main{max-width:1000px;margin:26px auto;padding:0 16px 50px}.hero{height:clamp(34
 @media(max-width:600px){header{padding:14px}.hero{background-position:center}.hero-content{bottom:20px}.hero-content p{font-size:14px}}
 </style></head><body>
 <header><div class="brand">BLACKFRIDAY HERING 2026<small>GINCANA CX · EXPEDIÇÃO SUBMERSA</small></div><a class="link" href="#ranking" onclick="showRanking();return false">RANKING ↗</a></header>
-<main><section class="hero"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="beginExpedition()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
-<div class="progress"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="panel">
+<main><section class="hero" id="homeScreen"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="beginExpedition()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
+<div class="progress" id="expProgress" style="display:none"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="panel" id="expPanel" style="display:none">
 <section class="stage active" id="s0"><div class="kicker">BRIEFING · 00</div><h2>Identifique sua equipe</h2><p>Uma rota foi fragmentada em etapas. Cada resposta correta libera o próximo trecho.</p><input id="team" placeholder="Nome da equipe" maxlength="50"><div class="feedback" id="f0"></div><button class="btn" onclick="start()">ENTRAR NA EXPEDIÇÃO →</button></section>
 <section class="stage" id="s1"><div class="kicker">ETAPA 1 · ORIGEM</div><h2>Todo percurso tem um ponto de partida.</h2><p>A história da Hering começa muito antes desta expedição. Encontre o ano que marca sua origem.</p><div class="quote">Em que ano a Hering nasceu?</div><input id="a1" placeholder="Digite o ano"><div class="feedback" id="f1"></div><button class="btn" onclick="check(1,'1880')">VALIDAR PISTA →</button></section>
 <section class="stage" id="s2"><div class="kicker">ETAPA 2 · O QUE CONECTA</div><h2>O tempo muda. O que conecta, permanece.</h2><div class="quote">“A marca atravessa gerações. A experiência acontece em cada contato.”</div><p>Qual é o foco que transforma um contato em uma experiência relevante?</p><input id="a2" placeholder="Digite sua resposta"><div class="feedback" id="f2"></div><button class="btn" onclick="check(2,'cliente')">VALIDAR PISTA →</button></section>
 <section class="stage" id="s3"><div class="kicker">ETAPA 3 · A CORRENTE</div><h2>Conexões não acontecem por acaso.</h2><div class="quote">“Ouvir é o começo. Compreender é o caminho. ______ é o que transforma a jornada.”</div><p>Complete com uma palavra que representa o que CX entrega em cada interação.</p><input id="a3" placeholder="Digite sua resposta"><div class="feedback" id="f3"></div><button class="btn" onclick="check(3,'experiência')">VALIDAR PISTA →</button></section>
 <section class="stage" id="s4"><div class="kicker">ETAPA 4 · CÂMARA DO TESOURO</div><h2>A última porta. A frase completa.</h2><p>Escrevam a frase que traduz a missão do CX.</p><div class="quote">Uma frase foi revelada ao longo da expedição. Digite-a exatamente como descobriram.</div><input id="final" placeholder="Escreva a frase completa"><div class="feedback" id="f4"></div><button class="btn" onclick="finish()">ABRIR CÂMARA →</button></section>
-<section class="stage" id="s5"><div class="kicker">MISSÃO CONCLUÍDA</div><h2 style="color:#20c4ff">Expedição concluída! 🏆</h2><p id="doneTeam"></p><div class="quote"><h2 id="finalPlace">Sua classificação está sendo calculada…</h2><p id="finalPoints"></p></div><h3>CLASSIFICAÇÃO FINAL</h3><div id="finalranklist"></div><button class="btn" onclick="showRanking()">VER RANKING GERAL →</button></section>
+<section class="stage" id="s5"><div class="kicker">MISSÃO CONCLUÍDA</div><h2 style="color:#20c4ff">Expedição concluída! 🏆</h2><p id="doneTeam"></p><div class="quote"><h2 id="finalPlace">Sua classificação está sendo calculada…</h2><p id="finalPoints"></p></div><h3>CLASSIFICAÇÃO FINAL</h3><div id="finalranklist"></div><button class="btn" onclick="showRanking()">VER RANKING GERAL →</button> <button class="btn secondary" onclick="home()" aria-label="Voltar ao início" title="Voltar ao início">⌂ VOLTAR AO INÍCIO</button></section>
 <section class="stage" id="ranking"><div class="kicker">PLACAR DA EXPEDIÇÃO</div><h2>Ranking de equipes</h2><p id="ranknote">Ranking compartilhado (Supabase).</p><div id="ranklist"></div><button class="btn secondary" onclick="go(5)">VOLTAR</button></section>
 </div><div class="foot"><span>HERING CX • 2026</span><span id="count">ETAPA 00 / 04</span></div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,9 +29,22 @@ let team='',teamId=null,started=Date.now(),records=[];
 const phrase='impulsionando conexões e entregando experiências memoráveis';
 function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\s+/g,' ')}
 function beginExpedition(){
+  document.getElementById('homeScreen').style.display='none';
+  document.getElementById('expProgress').style.display='flex';
+  document.getElementById('expPanel').style.display='block';
   go(0);
-  document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'center'});
+  document.getElementById('expPanel').scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(()=>document.getElementById('team').focus(),450);
+}
+function home(){
+  document.getElementById('homeScreen').style.display='block';
+  document.getElementById('expProgress').style.display='none';
+  document.getElementById('expPanel').style.display='none';
+  document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));
+  document.getElementById('s0').classList.add('active');
+  document.getElementById('count').textContent='ETAPA 00 / 04';
+  document.querySelectorAll('.progress span').forEach(x=>x.classList.remove('done'));
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function go(n){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.querySelectorAll('.progress span').forEach((x,i)=>x.classList.toggle('done',i<n));document.getElementById('count').textContent='ETAPA '+String(Math.min(n,4)).padStart(2,'0')+' / 04'}
 document.getElementById('team').addEventListener('keydown',e=>{if(e.key==='Enter')start()});
