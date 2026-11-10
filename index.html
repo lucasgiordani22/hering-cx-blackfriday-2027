@@ -11,7 +11,7 @@ main{max-width:1000px;margin:26px auto;padding:0 16px 50px}.hero{height:clamp(34
 <header><div class="brand">BLACKFRIDAY HERING 2026<small>GINCANA CX · EXPEDIÇÃO SUBMERSA</small></div><a class="link" href="#ranking" onclick="showRanking();return false">RANKING ↗</a></header>
 <main><section class="hero"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="beginExpedition()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
 <div class="progress"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="panel">
+<div class="panel" id="expeditionPanel" style="display:none">
 <section class="stage active" id="s0"><div class="kicker">BRIEFING · 00</div><h2>Identifique sua equipe</h2><p>Uma rota foi fragmentada em etapas. Cada resposta correta libera o próximo trecho.</p><input id="team" placeholder="Nome da equipe" maxlength="50"><div class="feedback" id="f0"></div><button class="btn" onclick="start()">ENTRAR NA EXPEDIÇÃO →</button></section>
 <section class="stage" id="s1"><div class="kicker">ETAPA 1 · ORIGEM</div><h2>Todo percurso tem um ponto de partida.</h2><p>A história da Hering começa muito antes desta expedição. Encontre o ano que marca sua origem.</p><div class="quote">Em que ano a Hering nasceu?</div><input id="a1" placeholder="Digite o ano"><div class="feedback" id="f1"></div><button class="btn" onclick="check(1,'1880')">VALIDAR PISTA →</button></section>
 <section class="stage" id="s2"><div class="kicker">ETAPA 2 · O QUE CONECTA</div><h2>O tempo muda. O que conecta, permanece.</h2><div class="quote">“A marca atravessa gerações. A experiência acontece em cada contato.”</div><p>Qual é o foco que transforma um contato em uma experiência relevante?</p><input id="a2" placeholder="Digite sua resposta"><div class="feedback" id="f2"></div><button class="btn" onclick="check(2,'cliente')">VALIDAR PISTA →</button></section>
@@ -27,10 +27,12 @@ const SUPABASE_KEY='sb_publishable_E2FghpZ9EhU5FnuuR9df4A_xkvkZoGJ';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let team='',teamId=null,started=Date.now(),records=[];
 const phrase='impulsionando conexões e entregando experiências memoráveis';
-function norm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
+function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\s+/g,' ')}
 function beginExpedition(){
   go(0);
-  document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'center'});
+  const panel=document.getElementById('expeditionPanel');
+  panel.style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(()=>document.getElementById('team').focus(),450);
 }
 function go(n){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.querySelectorAll('.progress span').forEach((x,i)=>x.classList.toggle('done',i<n));document.getElementById('count').textContent='ETAPA '+String(Math.min(n,4)).padStart(2,'0')+' / 04'}
@@ -39,16 +41,16 @@ document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListe
 async function start(){team=document.getElementById('team').value.trim();if(!team){f0.className='feedback bad';f0.textContent='Informe o nome da equipe.';return}
 f0.className='feedback';f0.textContent='Conectando ao placar…';
 const {data,error}=await db.from('gincana_teams').insert({team_name:team,stage:0,points:0,elapsed_seconds:0}).select().single();
-if(error){f0.className='feedback bad';f0.textContent='Não foi possível registrar equipe. Confira a configuração do Supabase.';console.error(error);return}
+if(error){f0.className='feedback bad';f0.textContent='ERRO SUPABASE: '+(error.message||JSON.stringify(error));console.error('ERRO REGISTRO EQUIPE:',error);return}
 teamId=data.id;started=Date.now();go(1)}
 async function check(n,a){let f=document.getElementById('f'+n);if(norm(document.getElementById('a'+n).value)===norm(a)){
 f.className='feedback ok';f.textContent='✓ Pista confirmada. Próxima etapa liberada.';
 await db.from('gincana_teams').update({stage:n,points:n*50}).eq('id',teamId);
 setTimeout(()=>go(n+1),600)}else{f.className='feedback bad';f.textContent='Não é aqui… revise a pista e tente novamente.'}}
-async function finish(){let f=document.getElementById('f4');try{if(norm(document.getElementById('final').value)===norm(phrase)){
+async function finish(){let f=document.getElementById('f4');if(norm(document.getElementById('final').value)===norm(phrase)){
 let seconds=Math.floor((Date.now()-started)/1000);const {error}=await db.from('gincana_teams').update({stage:4,points:0,elapsed_seconds:seconds,completed_at:new Date().toISOString()}).eq('id',teamId);
-if(error){f.className='feedback bad';f.textContent=friendly(error);return}
-document.getElementById('doneTeam').textContent=team+' • '+seconds+' segundos';go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}catch(e){f.className='feedback bad';f.textContent=friendly(e)}}
+if(error){f.className='feedback bad';f.textContent='Erro ao registrar conclusão no ranking.';console.error(error);return}
+document.getElementById('doneTeam').textContent=team+' • '+seconds+' segundos';go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
 const finishScores=[300,200,100,50];
 async function renderFinalRanking(){
  const el=document.getElementById('finalranklist');el.innerHTML='<p>Calculando classificação…</p>';
@@ -64,6 +66,5 @@ const {data,error}=await db.from('gincana_teams').select('team_name,points,elaps
 if(error){document.getElementById('ranklist').innerHTML='<p>Ranking indisponível. Verifique o SQL do Supabase.</p>';console.error(error);return}
 document.getElementById('ranklist').innerHTML=data.length?'<ol>'+data.map(r=>'<li><b>'+safe(r.team_name)+'</b> — '+r.points+' pontos · etapa '+r.stage+'/4'+(r.completed_at?' · '+r.elapsed_seconds+'s':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe iniciou ainda.</p>'}
 function safe(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function friendly(e){console.error('ERRO GINCANA:',e);return 'ERRO REAL: '+(e?.message||JSON.stringify(e));}
 db.channel('ranking-live').on('postgres_changes',{event:'*',schema:'public',table:'gincana_teams'},()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking()}).subscribe();
 </script></body></html>
