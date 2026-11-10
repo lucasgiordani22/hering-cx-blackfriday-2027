@@ -40,26 +40,31 @@ document.getElementById('team').addEventListener('keydown',e=>{if(e.key==='Enter
 document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();[()=>check(1,'1880'),()=>check(2,'cliente'),()=>check(3,'experiência'),finish][i]();}}));
 async function start(){team=document.getElementById('team').value.trim();if(!team){f0.className='feedback bad';f0.textContent='Informe o nome da equipe.';return}
 f0.className='feedback';f0.textContent='Conectando ao placar…';
-const {data,error}=await db.from('gincana_teams').insert({team_name:team,stage:0,points:0,elapsed_seconds:0}).select().single();
-if(error){f0.className='feedback bad';f0.textContent='ERRO SUPABASE: '+(error.message||JSON.stringify(error));console.error('ERRO REGISTRO EQUIPE:',error);return}
-teamId=data.id;started=Date.now();go(1)}
+const {data,error}=await db.rpc('gincana_start_or_resume',{p_team_name:team});
+if(error){f0.className='feedback bad';f0.textContent='ERRO SUPABASE: '+error.message;console.error('Cadastro/retomada:',error);return}
+const row=Array.isArray(data)?data[0]:data;
+teamId=row?.id||row?.team_id;
+if(!teamId){f0.className='feedback bad';f0.textContent='RPC não retornou o ID da equipe. Confira o console.';console.error('Retorno gincana_start_or_resume:',data);return}
+started=Date.now();go(Math.min(Number(row.stage||0)+1,4))}
 async function check(n,a){let f=document.getElementById('f'+n);if(norm(document.getElementById('a'+n).value)===norm(a)){
 f.className='feedback ok';f.textContent='✓ Pista confirmada. Próxima etapa liberada.';
-await db.from('gincana_teams').update({stage:n,points:n*50}).eq('id',teamId);
+const {error}=await db.rpc('gincana_answer',{p_team_id:teamId,p_stage:n,p_answer:document.getElementById('a'+n).value});
+if(error){f.className='feedback bad';f.textContent='ERRO SUPABASE: '+error.message;console.error('Validação etapa '+n,error);return}
 setTimeout(()=>go(n+1),600)}else{f.className='feedback bad';f.textContent='Não é aqui… revise a pista e tente novamente.'}}
 async function finish(){let f=document.getElementById('f4');if(norm(document.getElementById('final').value)===norm(phrase)){
-let seconds=Math.floor((Date.now()-started)/1000);const {error}=await db.from('gincana_teams').update({stage:4,points:0,elapsed_seconds:seconds,completed_at:new Date().toISOString()}).eq('id',teamId);
-if(error){f.className='feedback bad';f.textContent='Erro ao registrar conclusão no ranking.';console.error(error);return}
-document.getElementById('doneTeam').textContent=team+' • '+seconds+' segundos';go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
+const {data,error}=await db.rpc('gincana_answer',{p_team_id:teamId,p_stage:4,p_answer:document.getElementById('final').value});
+if(error){f.className='feedback bad';f.textContent='ERRO SUPABASE: '+error.message;console.error('Conclusão etapa 4:',error);return}
+document.getElementById('doneTeam').textContent=team;go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
 const finishScores=[300,200,100,50];
 async function renderFinalRanking(){
  const el=document.getElementById('finalranklist');el.innerHTML='<p>Calculando classificação…</p>';
  const {data,error}=await db.from('gincana_teams').select('id,team_name,points,elapsed_seconds,stage,completed_at').eq('stage',4).not('completed_at','is',null).order('completed_at',{ascending:true}).order('elapsed_seconds',{ascending:true});
  if(error){el.innerHTML='<p>Não foi possível carregar a classificação.</p>';console.error(error);return}
  const ranked=data||[];
- for(let i=0;i<ranked.length;i++){const score=finishScores[i]||0;if(ranked[i].points!==score){await db.from('gincana_teams').update({points:score}).eq('id',ranked[i].id);ranked[i].points=score}}
- const pos=ranked.findIndex(r=>r.id===teamId)+1;document.getElementById('finalPlace').textContent=pos?('Você ficou em '+pos+'º lugar!'):'Equipe concluída!';document.getElementById('finalPoints').textContent=pos?(finishScores[pos-1]||0)+' pontos conquistados':'Pontuação registrada';
- el.innerHTML=ranked.length?'<ol>'+ranked.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(finishScores[i]||0)+' pontos'+(i===0?' 🥇':i===1?' 🥈':i===2?' 🥉':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe concluiu ainda.</p>';
+ const pos=ranked.findIndex(r=>r.id===teamId)+1;
+ document.getElementById('finalPlace').textContent=pos?('Você ficou em '+pos+'º lugar!'):'Equipe concluída!';
+ document.getElementById('finalPoints').textContent=pos?(ranked[pos-1].points||0)+' pontos conquistados':'Pontuação registrada';
+ el.innerHTML=ranked.length?'<ol>'+ranked.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos'+(i===0?' 🥇':i===1?' 🥈':i===2?' 🥉':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe concluiu ainda.</p>';
 }
 async function showRanking(){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('ranking').classList.add('active');document.getElementById('ranklist').innerHTML='<p>Atualizando ranking…</p>';
 const {data,error}=await db.from('gincana_teams').select('team_name,points,elapsed_seconds,stage,completed_at').order('points',{ascending:false}).order('elapsed_seconds',{ascending:true});
