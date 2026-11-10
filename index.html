@@ -114,7 +114,11 @@ async function openRanking(){
  }catch(e){done.innerHTML='<li>Ranking indisponível.</li>';pending.innerHTML='';status('rankStatus',friendly(e),'error')}
 }
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function friendly(e){const m=String(e?.message||e||'');if(/Failed to fetch|NetworkError|fetch/i.test(m))return 'Sem conexão com o servidor. Confira sua internet e tente novamente.';if(/already|duplicate|unique/i.test(m))return 'Essa equipe já está cadastrada. Use o mesmo nome para retomar.';if(/not found|expired/i.test(m))return 'Não encontramos sua expedição. Confira o nome da equipe.';return 'Não foi possível concluir agora. Tente novamente em instantes. Se persistir, avise a organização.'}
+function friendly(e){
+  console.error('ERRO GINCANA:', e);
+  return 'ERRO REAL: ' + (e?.message || JSON.stringify(e));
+}
+{const m=String(e?.message||e||'');if(/Failed to fetch|NetworkError|fetch/i.test(m))return 'Sem conexão com o servidor. Confira sua internet e tente novamente.';if(/already|duplicate|unique/i.test(m))return 'Essa equipe já está cadastrada. Use o mesmo nome para retomar.';if(/not found|expired/i.test(m))return 'Não encontramos sua expedição. Confira o nome da equipe.';return 'Não foi possível concluir agora. Tente novamente em instantes. Se persistir, avise a organização.'}
 document.querySelectorAll('#team').forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')startOrResume()}));
 document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();answer(i+1)}}));
 </script>
