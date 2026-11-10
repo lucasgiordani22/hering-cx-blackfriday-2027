@@ -53,7 +53,7 @@ input:focus{border-color:#35cfff;box-shadow:0 0 0 3px #12baff18}
 <header><div class="brand">BLACKFRIDAY HERING 2026<small>GINCANA CX · EXPEDIÇÃO SUBMERSA</small></div><a class="link" href="#ranking" onclick="showRanking();return false">RANKING ↗</a></header>
 <main><section class="hero"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="beginExpedition()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
 <div class="progress"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="panel">
+<div class="panel" id="expeditionPanel" style="display:none">
 <section class="stage active" id="s0"><div class="kicker">BRIEFING · 00</div><h2>Identifique sua equipe</h2><p>Uma rota foi fragmentada em etapas. Cada resposta correta libera o próximo trecho.</p><input id="team" placeholder="Nome da equipe" maxlength="50"><div class="feedback" id="f0"></div><button class="btn" onclick="start()">ENTRAR NA EXPEDIÇÃO →</button></section>
 <section class="stage" id="s1"><div class="kicker">ETAPA 1 · ORIGEM</div><h2>Todo percurso tem um ponto de partida.</h2><p>A história da Hering começa muito antes desta expedição. Encontre o ano que marca sua origem.</p><div class="quote">Em que ano a Hering nasceu?</div><input id="a1" placeholder="Digite o ano"><div class="feedback" id="f1"></div><button class="btn" onclick="check(1,'1880')">VALIDAR PISTA →</button></section>
 <section class="stage" id="s2"><div class="kicker">ETAPA 2 · O QUE CONECTA</div><h2>O tempo muda. O que conecta, permanece.</h2><div class="quote">“A marca atravessa gerações. A experiência acontece em cada contato.”</div><p>Qual é o foco que transforma um contato em uma experiência relevante?</p><input id="a2" placeholder="Digite sua resposta"><div class="feedback" id="f2"></div><button class="btn" onclick="check(2,'cliente')">VALIDAR PISTA →</button></section>
@@ -72,7 +72,9 @@ const phrase='impulsionando conexões e entregando experiências memoráveis';
 function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\s+/g,' ')}
 function beginExpedition(){
   go(0);
-  document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'center'});
+  const panel=document.getElementById('expeditionPanel');
+  panel.style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(()=>document.getElementById('team').focus(),450);
 }
 function go(n){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.querySelectorAll('.progress span').forEach((x,i)=>x.classList.toggle('done',i<n));document.getElementById('count').textContent='ETAPA '+String(Math.min(n,4)).padStart(2,'0')+' / 04'}
