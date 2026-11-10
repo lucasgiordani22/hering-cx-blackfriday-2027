@@ -37,23 +37,22 @@ footer{display:flex;justify-content:space-between;gap:12px;color:#64839c;font-si
 <section class="hero" id="home"><div class="hero-content"><div class="eyebrow">UMA MISSÃO · QUATRO ETAPAS</div><h1>O tesouro<br>não está à vista.</h1><p>Siga as pistas, supere os desafios e descubra o que conecta cada experiência.</p><button class="btn" onclick="begin()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
 <div class="shell" id="shell"><div class="panel">
 <div class="progress-wrap"><span id="stepLabel">BRIEFING · 00</span><span id="stepCount">0 de 4 etapas</span></div><div class="progress" id="progress"><i></i><i></i><i></i><i></i></div>
-<section class="stage active" id="s0"><div class="eyebrow">BRIEFING</div><h2>Identifique sua equipe</h2><p>Use o nome oficial da equipe e seu nome de participante. O cadastro é único: se você já começou, poderá continuar de onde parou.</p>
+<section class="stage active" id="s0"><div class="eyebrow">BRIEFING</div><h2>Identifique sua equipe</h2><p>Informe apenas o nome oficial da equipe. Se ela já começou, poderá continuar de onde parou.</p>
 <div class="field"><label for="team">Nome da equipe</label><input id="team" maxlength="50" autocomplete="organization" placeholder="Ex.: Equipe Oceano"></div>
-<div class="field"><label for="player">Seu nome</label><input id="player" maxlength="70" autocomplete="name" placeholder="Nome e sobrenome"></div>
 <div class="status" id="f0" role="status" aria-live="polite"></div><div class="actions"><button class="btn" id="startBtn" onclick="startOrResume()">CONTINUAR →</button><button class="btn secondary" onclick="home()">Voltar ao início</button></div></section>
 <section class="stage" id="s1"><div class="eyebrow">ETAPA 1 · ORIGEM</div><h2>Todo percurso tem um ponto de partida.</h2><p>A história da Hering começa muito antes desta expedição. Encontre o ano que marca sua origem.</p><div class="quote">Em que ano a Hering nasceu?</div><div class="field"><label for="a1">Sua resposta</label><input id="a1" inputmode="numeric" placeholder="Digite o ano"></div><div class="status" id="f1" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(1)">VALIDAR PISTA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
 <section class="stage" id="s2"><div class="eyebrow">ETAPA 2 · O QUE CONECTA</div><h2>O tempo muda. O que conecta, permanece.</h2><div class="quote">“A marca atravessa gerações. A experiência acontece em cada contato.”</div><p>Qual é o foco que transforma um contato em uma experiência relevante?</p><div class="field"><label for="a2">Sua resposta</label><input id="a2" placeholder="Digite sua resposta"></div><div class="status" id="f2" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(2)">VALIDAR PISTA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
 <section class="stage" id="s3"><div class="eyebrow">ETAPA 3 · A CORRENTE</div><h2>Conexões não acontecem por acaso.</h2><div class="quote">“Ouvir é o começo. Compreender é o caminho. ______ é o que transforma a jornada.”</div><p>Complete com uma palavra que representa o que CX entrega em cada interação.</p><div class="field"><label for="a3">Sua resposta</label><input id="a3" placeholder="Digite sua resposta"></div><div class="status" id="f3" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(3)">VALIDAR PISTA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
 <section class="stage" id="s4"><div class="eyebrow">ETAPA 4 · CÂMARA DO TESOURO</div><h2>A última porta. A frase completa.</h2><p>Reúnam as pistas e escrevam a frase que traduz a missão do CX.</p><div class="quote">Uma frase foi revelada ao longo da expedição. Digite-a para abrir a câmara.</div><div class="field"><label for="final">Frase final</label><input id="final" placeholder="Escreva a frase completa"></div><div class="status" id="f4" role="status" aria-live="polite"></div><div class="actions"><button class="btn" onclick="answer(4)">ABRIR CÂMARA →</button><button class="btn secondary" onclick="resumeView()">Sair e continuar depois</button></div></section>
 <section class="stage" id="s5"><div class="eyebrow">MISSÃO CONCLUÍDA</div><h2 style="color:var(--cyan)">Expedição concluída! 🏆</h2><p id="doneTeam"></p><div class="reward"><div class="reward-card"><small>Classificação</small><b id="finalPlace">—</b></div><div class="reward-card"><small>Pontuação</small><b id="finalPoints">—</b></div><div class="reward-card"><small>Tempo</small><b id="finalTime">—</b></div></div><h3>O que sua equipe conquistou</h3><ol class="list" id="achievements"></ol><div class="actions"><button class="btn" onclick="openRanking()">VER RANKING →</button><button class="btn secondary" onclick="home()">Voltar ao início</button></div></section>
-<section class="stage" id="ranking"><div class="eyebrow">PLACAR DA EXPEDIÇÃO</div><h2>Ranking de equipes</h2><p>Classificação oficial calculada no servidor. Equipes em andamento aparecem separadas.</p><h3>Concluídas</h3><ol class="rank" id="ranklist"></ol><h3>Em andamento</h3><ol class="rank" id="pendinglist"></ol><div class="status" id="rankStatus" role="status" aria-live="polite"></div><div class="actions"><button class="btn secondary" onclick="home()">VOLTAR AO INÍCIO</button></div></section>
+<section class="stage" id="ranking"><div class="eyebrow">PLACAR DA EXPEDIÇÃO</div><h2>Ranking de equipes</h2><p>Classificação oficial calculada no servidor. Equipes em andamento aparecem separadas.</p><h3>Concluídas</h3><ol class="rank" id="ranklist"></ol><h3>Em andamento</h3><ol class="rank" id="pendinglist"></ol><div class="status" id="rankStatus" role="status" aria-live="polite"></div><div class="actions"><button class="btn secondary" onclick="home()">← VOLTAR AO INÍCIO</button></div></section>
 </div></div><footer><span>HERING CX · 2026</span><span>Expedição Submersa</span></footer></main><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL='https://cozjgknlmefjgxayvflt.supabase.co';
 const SUPABASE_KEY='sb_publishable_E2FghpZ9EhU5FnuuR9df4A_xkvkZoGJ';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let current=null,teamName='',playerName='',busy=false;
+let current=null,teamName='',busy=false;
 const answers={1:'1880',2:'cliente',3:'experiência',4:'impulsionando conexões e entregando experiências memoráveis'};
 const labels=['','Origem','O que conecta','A corrente','Câmara do tesouro'];
 function norm(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\\s+/g,' ')}
@@ -64,22 +63,22 @@ function begin(){document.getElementById('home').style.display='none';document.g
 function home(){document.getElementById('home').style.display='block';document.getElementById('shell').classList.remove('visible');show(0);window.scrollTo({top:0,behavior:'smooth'})}
 function show(n){document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.getElementById('stepLabel').textContent=n===0?'BRIEFING · 00':n===5?'MISSÃO CONCLUÍDA':'ETAPA '+n+' · '+labels[n].toUpperCase();document.getElementById('stepCount').textContent=Math.min(n,4)+' de 4 etapas';document.querySelectorAll('#progress i').forEach((e,i)=>e.classList.toggle('done',i< (current?.stage||0)));document.getElementById('shell').scrollIntoView({behavior:'smooth',block:'start'})}
 async function startOrResume(){
- if(busy)return;teamName=document.getElementById('team').value.trim();playerName=document.getElementById('player').value.trim();
- if(!teamName||!playerName){status('f0','Informe o nome da equipe e seu nome para continuar.','error');return}
+ if(busy)return;teamName=document.getElementById('team').value.trim();
+ if(!teamName){status('f0','Informe o nome da equipe para continuar.','error');return}
  busy=true;busyBtn('startBtn',true,'CONSULTANDO…');status('f0','Verificando se já existe uma expedição para você…');
  try{
-  const {data,error}=await db.rpc('gincana_start_or_resume',{p_team_name:teamName,p_player_name:playerName});
+  const {data,error}=await db.rpc('gincana_start_or_resume',{p_team_name:teamName});
   if(error)throw error;
   current=Array.isArray(data)?data[0]:data;
   if(!current?.team_id)throw new Error('Resposta inesperada do servidor.');
-  teamName=current.team_name;playerName=current.player_name;
+  teamName=current.team_name;
   if(current.stage>=4){await completedView();return}
   status('f0',current.resumed?'Expedição encontrada! Vamos continuar de onde você parou.':'Equipe registrada! Boa expedição.','ok');
   setTimeout(()=>show(current.stage+1),350);
  }catch(e){status('f0',friendly(e),'error')}
  finally{busy=false;busyBtn('startBtn',false)}
 }
-function resumeView(){home();toast('Seu progresso fica salvo. Use o mesmo nome de equipe e participante para retomar.')}
+function resumeView(){home();toast('Seu progresso fica salvo. Use o mesmo nome de equipe para retomar.')}
 async function answer(n){
  if(busy||!current)return;const input=document.getElementById(n===4?'final':'a'+n);const value=input.value.trim();
  if(!value){status('f'+n,'Digite uma resposta antes de validar.','error');input.focus();return}
@@ -97,7 +96,7 @@ async function answer(n){
  finally{busy=false}
 }
 async function completedView(){
- show(5);document.getElementById('doneTeam').textContent=teamName+' · '+playerName;
+ show(5);document.getElementById('doneTeam').textContent=teamName;
  document.getElementById('finalPlace').textContent='…';document.getElementById('finalPoints').textContent='…';document.getElementById('finalTime').textContent='…';
  try{const {data,error}=await db.rpc('gincana_get_result',{p_team_id:current.team_id});if(error)throw error;const r=Array.isArray(data)?data[0]:data;
  document.getElementById('finalPlace').textContent=r.position+'º';document.getElementById('finalPoints').textContent=r.points+' pts';document.getElementById('finalTime').textContent=formatTime(r.elapsed_seconds);
@@ -115,8 +114,8 @@ async function openRanking(){
  }catch(e){done.innerHTML='<li>Ranking indisponível.</li>';pending.innerHTML='';status('rankStatus',friendly(e),'error')}
 }
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function friendly(e){const m=String(e?.message||e||'');if(/Failed to fetch|NetworkError|fetch/i.test(m))return 'Sem conexão com o servidor. Confira sua internet e tente novamente.';if(/already|duplicate|unique/i.test(m))return 'Essa equipe ou participante já está cadastrado. Use os dados existentes para retomar.';if(/not found|expired/i.test(m))return 'Não encontramos sua expedição. Confira o nome da equipe e do participante.';return 'Não foi possível concluir agora. Tente novamente em instantes. Se persistir, avise a organização.'}
-document.querySelectorAll('#team,#player').forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')startOrResume()}));
+function friendly(e){const m=String(e?.message||e||'');if(/Failed to fetch|NetworkError|fetch/i.test(m))return 'Sem conexão com o servidor. Confira sua internet e tente novamente.';if(/already|duplicate|unique/i.test(m))return 'Essa equipe já está cadastrada. Use o mesmo nome para retomar.';if(/not found|expired/i.test(m))return 'Não encontramos sua expedição. Confira o nome da equipe.';return 'Não foi possível concluir agora. Tente novamente em instantes. Se persistir, avise a organização.'}
+document.querySelectorAll('#team').forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')startOrResume()}));
 document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();answer(i+1)}}));
 </script>
 </body></html>
