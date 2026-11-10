@@ -7,11 +7,53 @@ main{max-width:1000px;margin:26px auto;padding:0 16px 50px}.hero{height:clamp(34
 .progress{display:flex;gap:8px;margin:22px 0}.progress span{height:4px;flex:1;background:#16334b;border-radius:5px}.progress span.done{background:var(--cyan);box-shadow:0 0 10px #20c4ff66}
 .panel{border:1px solid #164361;background:linear-gradient(145deg,#0b1724,#060d15);border-radius:18px;padding:clamp(20px,4vw,38px);min-height:320px}.stage{display:none}.stage.active{display:block;animation:fade .25s}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.kicker{color:var(--cyan);font-size:11px;letter-spacing:2px;font-weight:800}.stage h2{font-size:clamp(25px,4vw,38px);line-height:1.15;margin:12px 0}.stage p{color:#b9cede}.quote{background:#061c2d;border-left:4px solid #14a9ef;padding:16px;border-radius:8px;margin:18px 0;color:#d9f2ff}input{display:block;width:100%;background:#030910;border:1px solid #28516d;color:white;border-radius:10px;padding:14px;font-size:16px;margin:10px 0}button{font-family:inherit}.feedback{min-height:25px;margin:9px 0;font-weight:bold}.ok{color:#5ff0b5}.bad{color:#ff9d91}.foot{color:#557b98;font-size:11px;display:flex;justify-content:space-between;margin:14px 4px}
 @media(max-width:600px){header{padding:14px}.hero{background-position:center}.hero-content{bottom:20px}.hero-content p{font-size:14px}}
+
+/* === UX/UI POLISH — VISUAL ONLY === */
+:root{--cyan:#35d8ff;--blue:#087bd0;--aqua:#7df4ff;--line:#1b5476}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 50% -15%,#0b2b45 0%,#03070d 55%);letter-spacing:.12px}
+header{backdrop-filter:blur(14px);background:#040a11eF;border-bottom:1px solid #1a4965;box-shadow:0 8px 30px #0003}
+.brand{display:flex;flex-direction:column;gap:4px}
+.brand small{display:flex;align-items:center;gap:8px}
+.brand small:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+.link{display:inline-flex;align-items:center;gap:9px;padding:10px 15px;border:1px solid #236083;border-radius:999px;background:#092033;color:#b8edff;font-weight:800;letter-spacing:.7px;transition:all .2s}
+.link:before{content:"♜";font-size:16px;color:#64dcff}
+.link:hover{background:#10314b;border-color:#47cfff;transform:translateY(-1px);box-shadow:0 0 20px #00baff24}
+.hero{border-radius:22px;border-color:#23719a;box-shadow:0 24px 70px #0007,0 0 0 1px #2ed1ff12 inset}
+.hero:after{background:linear-gradient(0deg,#020711f2 0%,#02071125 58%,#02071112 100%)}
+.hero-content h1{text-wrap:balance}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;border:1px solid #48d5ff;background:linear-gradient(135deg,#078bdc,#0752a0);box-shadow:0 8px 24px #007dce30,inset 0 1px #ffffff30;font-size:13px;letter-spacing:.8px;transition:transform .18s,filter .18s,box-shadow .18s}
+.btn:after{content:"›";font-size:24px;line-height:12px;font-weight:400;opacity:.9}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px);box-shadow:0 12px 30px #00aaff35}
+.btn:active{transform:translateY(0) scale(.985)}
+.btn:focus-visible,.link:focus-visible,input:focus-visible{outline:2px solid #8af0ff;outline-offset:3px}
+.btn.secondary{background:linear-gradient(180deg,#0b2031,#06111d);border-color:#285b7b;color:#b9eaff}
+.progress{gap:7px;margin:24px 0 18px;position:relative}
+.progress span{height:5px;background:#17344b;border-radius:99px;overflow:hidden;transition:background .25s,box-shadow .25s}
+.progress span.done{background:linear-gradient(90deg,#087bd0,#35d8ff);box-shadow:0 0 13px #20c4ff55}
+.panel{border-color:#1b4d6b;background:linear-gradient(145deg,#0b1c2bdf,#050c14f5);box-shadow:0 18px 50px #0003,inset 0 1px #ffffff08;border-radius:22px}
+.kicker{display:flex;align-items:center;gap:10px}
+.kicker:before{content:"";height:2px;width:20px;background:var(--cyan);box-shadow:0 0 8px #20c4ff70}
+.quote{border:1px solid #12415d;border-left:3px solid #26c7ff;background:linear-gradient(120deg,#062033,#071523);box-shadow:inset 0 1px #ffffff08}
+input{transition:border-color .2s,box-shadow .2s;background:#030a12}
+input:focus{border-color:#35cfff;box-shadow:0 0 0 3px #12baff18}
+.feedback{border-radius:8px}
+#ranklist ol,#finalranklist ol{list-style:none;padding:0;margin:12px 0;counter-reset:rank}
+#ranklist li,#finalranklist li{counter-increment:rank;display:flex;align-items:center;gap:12px;padding:13px 15px;margin:8px 0;border:1px solid #17415b;border-radius:12px;background:linear-gradient(100deg,#0a1b2a,#07111b);color:#ccecff}
+#ranklist li:before,#finalranklist li:before{content:counter(rank,decimal-leading-zero);font-size:12px;font-weight:900;color:#54d9ff;min-width:24px}
+#ranklist li:first-child,#finalranklist li:first-child{border-color:#3a8a9f;background:linear-gradient(100deg,#0d2b3b,#091824)}
+#ranklist li:first-child:before,#finalranklist li:first-child:before{content:"🥇";font-size:17px}
+#ranklist li:nth-child(2):before,#finalranklist li:nth-child(2):before{content:"🥈";font-size:17px}
+#ranklist li:nth-child(3):before,#finalranklist li:nth-child(3):before{content:"🥉";font-size:17px}
+.foot{border-top:1px solid #102b40;padding-top:14px;letter-spacing:1px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.link,.progress span{transition:none}.stage.active{animation:none}}
+@media(max-width:600px){.link{padding:9px 11px;font-size:11px}.brand{font-size:12px}.brand small{font-size:9px}.panel{border-radius:18px}.btn{width:100%;min-height:50px}}
+
 </style></head><body>
 <header><div class="brand">BLACKFRIDAY HERING 2026<small>GINCANA CX · EXPEDIÇÃO SUBMERSA</small></div><a class="link" href="#ranking" onclick="showRanking();return false">RANKING ↗</a></header>
 <main><section class="hero"><div class="hero-content"><h1>O tesouro não está à vista.</h1><p>Siga as pistas, supere os desafios e encontre a câmara final.</p><button class="btn" onclick="beginExpedition()">⚓ INICIAR EXPEDIÇÃO →</button></div></section>
 <div class="progress"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="panel" id="expeditionPanel" style="display:none">
+<div class="panel">
 <section class="stage active" id="s0"><div class="kicker">BRIEFING · 00</div><h2>Identifique sua equipe</h2><p>Uma rota foi fragmentada em etapas. Cada resposta correta libera o próximo trecho.</p><input id="team" placeholder="Nome da equipe" maxlength="50"><div class="feedback" id="f0"></div><button class="btn" onclick="start()">ENTRAR NA EXPEDIÇÃO →</button></section>
 <section class="stage" id="s1"><div class="kicker">ETAPA 1 · ORIGEM</div><h2>Todo percurso tem um ponto de partida.</h2><p>A história da Hering começa muito antes desta expedição. Encontre o ano que marca sua origem.</p><div class="quote">Em que ano a Hering nasceu?</div><input id="a1" placeholder="Digite o ano"><div class="feedback" id="f1"></div><button class="btn" onclick="check(1,'1880')">VALIDAR PISTA →</button></section>
 <section class="stage" id="s2"><div class="kicker">ETAPA 2 · O QUE CONECTA</div><h2>O tempo muda. O que conecta, permanece.</h2><div class="quote">“A marca atravessa gerações. A experiência acontece em cada contato.”</div><p>Qual é o foco que transforma um contato em uma experiência relevante?</p><input id="a2" placeholder="Digite sua resposta"><div class="feedback" id="f2"></div><button class="btn" onclick="check(2,'cliente')">VALIDAR PISTA →</button></section>
@@ -30,9 +72,7 @@ const phrase='impulsionando conexões e entregando experiências memoráveis';
 function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\s+/g,' ')}
 function beginExpedition(){
   go(0);
-  const panel=document.getElementById('expeditionPanel');
-  panel.style.display='block';
-  panel.scrollIntoView({behavior:'smooth',block:'center'});
+  document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(()=>document.getElementById('team').focus(),450);
 }
 function go(n){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.querySelectorAll('.progress span').forEach((x,i)=>x.classList.toggle('done',i<n));document.getElementById('count').textContent='ETAPA '+String(Math.min(n,4)).padStart(2,'0')+' / 04'}
@@ -40,31 +80,26 @@ document.getElementById('team').addEventListener('keydown',e=>{if(e.key==='Enter
 document.querySelectorAll('#a1,#a2,#a3,#final').forEach((el,i)=>el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();[()=>check(1,'1880'),()=>check(2,'cliente'),()=>check(3,'experiência'),finish][i]();}}));
 async function start(){team=document.getElementById('team').value.trim();if(!team){f0.className='feedback bad';f0.textContent='Informe o nome da equipe.';return}
 f0.className='feedback';f0.textContent='Conectando ao placar…';
-const {data,error}=await db.rpc('gincana_start_or_resume',{p_team_name:team});
-if(error){f0.className='feedback bad';f0.textContent='ERRO SUPABASE: '+error.message;console.error('Cadastro/retomada:',error);return}
-const row=Array.isArray(data)?data[0]:data;
-teamId=row?.id||row?.team_id;
-if(!teamId){f0.className='feedback bad';f0.textContent='RPC não retornou o ID da equipe. Confira o console.';console.error('Retorno gincana_start_or_resume:',data);return}
-started=Date.now();go(Math.min(Number(row.stage||0)+1,4))}
+const {data,error}=await db.from('gincana_teams').insert({team_name:team,stage:0,points:0,elapsed_seconds:0}).select().single();
+if(error){f0.className='feedback bad';f0.textContent='Não foi possível registrar equipe. Confira a configuração do Supabase.';console.error(error);return}
+teamId=data.id;started=Date.now();go(1)}
 async function check(n,a){let f=document.getElementById('f'+n);if(norm(document.getElementById('a'+n).value)===norm(a)){
 f.className='feedback ok';f.textContent='✓ Pista confirmada. Próxima etapa liberada.';
-const {error}=await db.rpc('gincana_answer',{p_team_id:teamId,p_stage:n,p_answer:document.getElementById('a'+n).value});
-if(error){f.className='feedback bad';f.textContent='ERRO SUPABASE: '+error.message;console.error('Validação etapa '+n,error);return}
+await db.from('gincana_teams').update({stage:n,points:n*50}).eq('id',teamId);
 setTimeout(()=>go(n+1),600)}else{f.className='feedback bad';f.textContent='Não é aqui… revise a pista e tente novamente.'}}
 async function finish(){let f=document.getElementById('f4');if(norm(document.getElementById('final').value)===norm(phrase)){
-const {data,error}=await db.rpc('gincana_answer',{p_team_id:teamId,p_stage:4,p_answer:document.getElementById('final').value});
-if(error){f.className='feedback bad';f.textContent='ERRO SUPABASE: '+error.message;console.error('Conclusão etapa 4:',error);return}
-document.getElementById('doneTeam').textContent=team;go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
+let seconds=Math.floor((Date.now()-started)/1000);const {error}=await db.from('gincana_teams').update({stage:4,points:0,elapsed_seconds:seconds,completed_at:new Date().toISOString()}).eq('id',teamId);
+if(error){f.className='feedback bad';f.textContent='Erro ao registrar conclusão no ranking.';console.error(error);return}
+document.getElementById('doneTeam').textContent=team+' • '+seconds+' segundos';go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
 const finishScores=[300,200,100,50];
 async function renderFinalRanking(){
  const el=document.getElementById('finalranklist');el.innerHTML='<p>Calculando classificação…</p>';
  const {data,error}=await db.from('gincana_teams').select('id,team_name,points,elapsed_seconds,stage,completed_at').eq('stage',4).not('completed_at','is',null).order('completed_at',{ascending:true}).order('elapsed_seconds',{ascending:true});
  if(error){el.innerHTML='<p>Não foi possível carregar a classificação.</p>';console.error(error);return}
  const ranked=data||[];
- const pos=ranked.findIndex(r=>r.id===teamId)+1;
- document.getElementById('finalPlace').textContent=pos?('Você ficou em '+pos+'º lugar!'):'Equipe concluída!';
- document.getElementById('finalPoints').textContent=pos?(ranked[pos-1].points||0)+' pontos conquistados':'Pontuação registrada';
- el.innerHTML=ranked.length?'<ol>'+ranked.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos'+(i===0?' 🥇':i===1?' 🥈':i===2?' 🥉':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe concluiu ainda.</p>';
+ for(let i=0;i<ranked.length;i++){const score=finishScores[i]||0;if(ranked[i].points!==score){await db.from('gincana_teams').update({points:score}).eq('id',ranked[i].id);ranked[i].points=score}}
+ const pos=ranked.findIndex(r=>r.id===teamId)+1;document.getElementById('finalPlace').textContent=pos?('Você ficou em '+pos+'º lugar!'):'Equipe concluída!';document.getElementById('finalPoints').textContent=pos?(finishScores[pos-1]||0)+' pontos conquistados':'Pontuação registrada';
+ el.innerHTML=ranked.length?'<ol>'+ranked.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(finishScores[i]||0)+' pontos'+(i===0?' 🥇':i===1?' 🥈':i===2?' 🥉':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe concluiu ainda.</p>';
 }
 async function showRanking(){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('ranking').classList.add('active');document.getElementById('ranklist').innerHTML='<p>Atualizando ranking…</p>';
 const {data,error}=await db.from('gincana_teams').select('team_name,points,elapsed_seconds,stage,completed_at').order('points',{ascending:false}).order('elapsed_seconds',{ascending:true});
