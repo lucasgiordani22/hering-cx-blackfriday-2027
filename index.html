@@ -99,7 +99,7 @@ async function completedView(){
  show(5);document.getElementById('doneTeam').textContent=teamName;
  document.getElementById('finalPlace').textContent='…';document.getElementById('finalPoints').textContent='…';document.getElementById('finalTime').textContent='…';
  try{const {data,error}=await db.rpc('gincana_get_result',{p_team_id:current.team_id});if(error)throw error;const r=Array.isArray(data)?data[0]:data;
- document.getElementById('finalPlace').textContent=r.position+'º';document.getElementById('finalPoints').textContent=r.points+' pts';document.getElementById('finalTime').textContent=formatTime(r.elapsed_seconds);
+ document.getElementById('finalPlace').textContent=r.ranking_position+'º';document.getElementById('finalPoints').textContent=r.points+' pts';document.getElementById('finalTime').textContent=formatTime(r.elapsed_seconds);
  document.getElementById('achievements').innerHTML='<li>Briefing e identificação concluídos</li><li>Etapa 1 · Origem (+50 pts)</li><li>Etapa 2 · O que conecta (+50 pts)</li><li>Etapa 3 · A corrente (+50 pts)</li><li>Etapa 4 · Câmara do tesouro (+50 pts)</li><li>Missão finalizada · '+r.points+' pontos totais</li>';
  }catch(e){toast(friendly(e))}
 }
