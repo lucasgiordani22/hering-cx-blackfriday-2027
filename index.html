@@ -55,12 +55,11 @@ async function finish(){let f=document.getElementById('f4');if(norm(document.get
 const {data,error}=await db.rpc('gincana_answer',{p_team_id:teamId,p_stage:4,p_answer:document.getElementById('final').value});
 if(error){f.className='feedback bad';f.textContent='ERRO SUPABASE: '+error.message;console.error('Conclusão etapa 4:',error);return}
 document.getElementById('doneTeam').textContent=team;go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
-const finishScores=[300,200,100,50];
+const finishScores=[800,600,400,200];
 async function renderFinalRanking(){
  const el=document.getElementById('finalranklist');
  const placeEl=document.getElementById('finalPlace');
  const pointsEl=document.getElementById('finalPoints');
- el.innerHTML='<p>Atualizando classificação…</p>';
  const {data,error}=await db.rpc('gincana_ranking');
  if(error){el.innerHTML='<p>Não foi possível carregar a classificação. Atualize a página ou procure a comissão.</p>';console.error('Ranking final:',error);return}
  const ranked=data||[];
@@ -75,8 +74,8 @@ async function renderFinalRanking(){
    placeEl.textContent='Conclusão registrada!';
    pointsEl.textContent='Sua classificação será definida quando o servidor confirmar a chegada.';
  }
- el.innerHTML=completed.length?'<ol>'+completed.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos · '+(r.ranking_position||i+1)+'º lugar</li>').join('')+'</ol>':'<p>Aguardando as primeiras equipes concluírem.</p>';
- 
+ const nextList=completed.length?'<ol>'+completed.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos · '+(r.ranking_position||i+1)+'º lugar</li>').join('')+'</ol>':'<p>Aguardando as primeiras equipes concluírem.</p>';
+ if(el.innerHTML!==nextList) el.innerHTML=nextList;
 }
 async function showRanking(){
  document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));
@@ -94,5 +93,5 @@ async function showRanking(){
 }
 function safe(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 db.channel('ranking-live').on('postgres_changes',{event:'*',schema:'public',table:'gincana_teams'},()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking();if(document.getElementById('s5').classList.contains('active'))renderFinalRanking()}).subscribe();
-setInterval(()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking();if(document.getElementById('s5').classList.contains('active'))renderFinalRanking()},2000);
+setInterval(()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking()},2000);
 </script></body></html>
