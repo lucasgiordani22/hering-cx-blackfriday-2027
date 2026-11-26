@@ -69,14 +69,14 @@ async function renderFinalRanking(){
  const pos=mine?.ranking_position || (mine?.completed ? completed.findIndex(r=>r.team_name===mine.team_name)+1 : 0);
  const allDone=completed.length>=4;
  if(pos){
-   placeEl.textContent=(allDone?'Classificação final: ':'Colocação provisória: ')+pos+'º lugar';
-   pointsEl.textContent=(mine?.points ?? '—')+' pontos conquistados'+(allDone?'':' · aguardando as demais equipes');
+   placeEl.textContent='Classificação: '+pos+'º lugar';
+   pointsEl.textContent=(mine?.points ?? '—')+' pontos';
  }else{
    placeEl.textContent='Conclusão registrada!';
    pointsEl.textContent='Sua classificação será definida quando o servidor confirmar a chegada.';
  }
  el.innerHTML=completed.length?'<ol>'+completed.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos · '+(r.ranking_position||i+1)+'º lugar</li>').join('')+'</ol>':'<p>Aguardando as primeiras equipes concluírem.</p>';
- if(!allDone) el.innerHTML+='<p style="color:#9bb6c9;font-size:13px">Classificação provisória — será atualizada conforme as outras equipes concluírem.</p>';
+ 
 }
 async function showRanking(){
  document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));
