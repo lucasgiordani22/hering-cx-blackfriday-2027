@@ -57,19 +57,42 @@ if(error){f.className='feedback bad';f.textContent='ERRO SUPABASE: '+error.messa
 document.getElementById('doneTeam').textContent=team;go(5);await renderFinalRanking()}else{f.className='feedback bad';f.textContent='A câmara permanece fechada. Revise a frase completa.'}}
 const finishScores=[300,200,100,50];
 async function renderFinalRanking(){
- const el=document.getElementById('finalranklist');el.innerHTML='<p>Calculando classificação…</p>';
- const {data,error}=await db.from('gincana_teams').select('id,team_name,points,elapsed_seconds,stage,completed_at').eq('stage',4).not('completed_at','is',null).order('completed_at',{ascending:true}).order('elapsed_seconds',{ascending:true});
- if(error){el.innerHTML='<p>Não foi possível carregar a classificação.</p>';console.error(error);return}
+ const el=document.getElementById('finalranklist');
+ const placeEl=document.getElementById('finalPlace');
+ const pointsEl=document.getElementById('finalPoints');
+ el.innerHTML='<p>Atualizando classificação…</p>';
+ const {data,error}=await db.rpc('gincana_ranking');
+ if(error){el.innerHTML='<p>Não foi possível carregar a classificação. Atualize a página ou procure a comissão.</p>';console.error('Ranking final:',error);return}
  const ranked=data||[];
- const pos=ranked.findIndex(r=>r.id===teamId)+1;
- document.getElementById('finalPlace').textContent=pos?('Você ficou em '+pos+'º lugar!'):'Equipe concluída!';
- document.getElementById('finalPoints').textContent=pos?(ranked[pos-1].points||0)+' pontos conquistados':'Pontuação registrada';
- el.innerHTML=ranked.length?'<ol>'+ranked.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos'+(i===0?' 🥇':i===1?' 🥈':i===2?' 🥉':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe concluiu ainda.</p>';
+ const mine=ranked.find(r=>r.team_id===teamId || r.id===teamId || r.team_name===team);
+ const completed=ranked.filter(r=>r.completed);
+ const pos=mine?.ranking_position || (mine?.completed ? completed.findIndex(r=>r.team_name===mine.team_name)+1 : 0);
+ const allDone=completed.length>=4;
+ if(pos){
+   placeEl.textContent=(allDone?'Classificação final: ':'Colocação provisória: ')+pos+'º lugar';
+   pointsEl.textContent=(mine?.points ?? '—')+' pontos conquistados'+(allDone?'':' · aguardando as demais equipes');
+ }else{
+   placeEl.textContent='Conclusão registrada!';
+   pointsEl.textContent='Sua classificação será definida quando o servidor confirmar a chegada.';
+ }
+ el.innerHTML=completed.length?'<ol>'+completed.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos · '+(r.ranking_position||i+1)+'º lugar</li>').join('')+'</ol>':'<p>Aguardando as primeiras equipes concluírem.</p>';
+ if(!allDone) el.innerHTML+='<p style="color:#9bb6c9;font-size:13px">Classificação provisória — será atualizada conforme as outras equipes concluírem.</p>';
 }
-async function showRanking(){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('ranking').classList.add('active');document.getElementById('ranklist').innerHTML='<p>Atualizando ranking…</p>';
-const {data,error}=await db.from('gincana_teams').select('team_name,points,elapsed_seconds,stage,completed_at').order('points',{ascending:false}).order('elapsed_seconds',{ascending:true});
-if(error){document.getElementById('ranklist').innerHTML='<p>Ranking indisponível. Verifique o SQL do Supabase.</p>';console.error(error);return}
-document.getElementById('ranklist').innerHTML=data.length?'<ol>'+data.map(r=>'<li><b>'+safe(r.team_name)+'</b> — '+r.points+' pontos · etapa '+r.stage+'/4'+(r.completed_at?' · '+r.elapsed_seconds+'s':'')+'</li>').join('')+'</ol>':'<p>Nenhuma equipe iniciou ainda.</p>'}
+async function showRanking(){
+ document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));
+ document.getElementById('ranking').classList.add('active');
+ document.getElementById('ranklist').innerHTML='<p>Atualizando ranking…</p>';
+ const {data,error}=await db.rpc('gincana_ranking');
+ if(error){document.getElementById('ranklist').innerHTML='<p>Ranking indisponível. Verifique a configuração do Supabase.</p>';console.error('Ranking geral:',error);return}
+ const rows=data||[];
+ const completed=rows.filter(r=>r.completed);
+ const pending=rows.filter(r=>!r.completed);
+ let html='';
+ if(completed.length){html+='<h3>CLASSIFICAÇÃO</h3><ol>'+completed.map((r,i)=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos · '+(r.ranking_position||i+1)+'º lugar</li>').join('')+'</ol>'}
+ if(pending.length){html+='<h3 style="margin-top:22px">EM ANDAMENTO</h3><ul>'+pending.map(r=>'<li><b>'+safe(r.team_name)+'</b> — '+(r.points||0)+' pontos · etapa '+r.stage+'/4</li>').join('')+'</ul>'}
+ document.getElementById('ranklist').innerHTML=html||'<p>Nenhuma equipe iniciou ainda.</p>';
+}
 function safe(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-db.channel('ranking-live').on('postgres_changes',{event:'*',schema:'public',table:'gincana_teams'},()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking()}).subscribe();
+db.channel('ranking-live').on('postgres_changes',{event:'*',schema:'public',table:'gincana_teams'},()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking();if(document.getElementById('s5').classList.contains('active'))renderFinalRanking()}).subscribe();
+setInterval(()=>{if(document.getElementById('ranking').classList.contains('active'))showRanking();if(document.getElementById('s5').classList.contains('active'))renderFinalRanking()},2000);
 </script></body></html>
